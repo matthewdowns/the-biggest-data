@@ -1,0 +1,16 @@
+apiVersion: 1
+
+datasources:
+- name: The Biggest Data
+  type: postgres
+  access: proxy
+  url: tbd-access-node
+  password: tbd
+  user: tbd
+  database: tbd
+  jsonData:
+     tlsAuth: false
+     tlsAuthWithCACert: false
+  version: 1
+  isDefault: true
+  editable: true

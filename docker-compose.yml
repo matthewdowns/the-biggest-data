@@ -1,0 +1,76 @@
+version: '3'
+
+networks:
+    tbd:
+        driver: overlay
+        attachable: true
+
+volumes:
+    tbd_grafana_data:
+        driver: local
+    tbd_access_node_data:
+        driver: local
+    tbd_data_node_1_data:
+        driver: local
+    tbd_data_node_2_data:
+        driver: local
+
+services:
+    tbd-grafana:
+        image: grafana/grafana:latest
+        container_name: tbd-grafana
+        restart: unless-stopped
+        environment:
+            GF_INSTALL_PLUGINS: marcusolsson-gantt-panel
+        ports:
+            - "3000:3000"
+        networks:
+            - tbd
+        volumes:
+            - tbd_grafana_data:/var/lib/grafana
+
+    tbd-acess-node:
+        image: timescale/timescaledb:latest-pg13
+        container_name: tbd-access-node
+        restart: unless-stopped
+        env_file: tbd.env
+        ports:
+            - "5432:5432"
+        networks:
+            - tbd
+        volumes:
+            - tbd_access_node_data:/var/lib/postgresql/data
+            - ./trust-all.sh:/docker-entrypoint-initdb.d/777_trust.sh
+            - ./unsafe-boost.sh:/docker-entrypoint-initdb.d/888_boost.sh
+            - ./init-access-node.sh:/docker-entrypoint-initdb.d/999_cluster.sh
+            - ./data:/tmp/data
+
+    tbd_data_node_1:
+        image: timescale/timescaledb:latest-pg13
+        container_name: tbd-data-node-1
+        restart: unless-stopped
+        env_file: tbd.env
+        ports:
+            - "5433:5432"
+        networks:
+            - tbd
+        volumes:
+            - tbd_data_node_1_data:/var/lib/postgresql/data
+            - ./trust-all.sh:/docker-entrypoint-initdb.d/777_trust.sh
+            - ./unsafe-boost.sh:/docker-entrypoint-initdb.d/888_boost.sh
+            - ./init-data-node.sh:/docker-entrypoint-initdb.d/999_cluster.sh
+
+    tbd_data_node_2:
+        image: timescale/timescaledb:latest-pg13
+        container_name: tbd-data-node-2
+        restart: unless-stopped
+        env_file: tbd.env
+        ports:
+            - "5434:5432"
+        networks:
+            - tbd
+        volumes:
+            - tbd_data_node_2_data:/var/lib/postgresql/data
+            - ./trust-all.sh:/docker-entrypoint-initdb.d/777_trust.sh
+            - ./unsafe-boost.sh:/docker-entrypoint-initdb.d/888_boost.sh
+            - ./init-data-node.sh:/docker-entrypoint-initdb.d/999_cluster.sh
