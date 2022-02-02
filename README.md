@@ -16,7 +16,7 @@ Start the docker containers:
 docker-compose up
 ```
 
-Login your Grafana instance with _admin/admin_, and watch the pre-configured dashboard.
+Login your Grafana instance with _admin/admin_, and set up a dashboard.
 
 ## Go!
 
@@ -26,5 +26,4 @@ npm start
 ```
 
 At this point, a very large amount of randomized data will be ingested into
-the distributed timeseries database. Depending on the source language used,
-the entire process can take between 5 and 10 minutes.
+the distributed timeseries database. The entire process can take up to 5 minutes.
