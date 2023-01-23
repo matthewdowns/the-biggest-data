@@ -4,7 +4,7 @@ datasources:
 - name: The Biggest Data
   type: postgres
   access: proxy
-  url: tbd-access-node
+  url: tbd_access_node
   password: tbd
   user: tbd
   database: tbd
